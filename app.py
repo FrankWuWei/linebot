@@ -32,6 +32,7 @@ HEADER = {
 @app.route("/", methods=['POST', 'GET'])
 def index():
     if request.method == 'GET':
+        print('OK')
         return 'ok'
     body = request.json
     events = body["events"]
@@ -138,6 +139,7 @@ def index():
 
 @app.route("/callback", methods=['POST'])
 def callback():
+    print('callback')
     signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
@@ -186,7 +188,31 @@ def getNameEmojiMessage():
 
 
 def getCarouselMessage(data):
-    message = dict()
+    message = {
+      "type": "template",
+      "altText": "this is a image carousel template",
+      "template": {
+          "type": "image_carousel",
+          "columns": [
+              {
+                "imageUrl": F"{end_point}/static/taipei_101.jpeg",
+                "action": {
+                  "type": "postback",
+                  "label": "台北101",
+                  "data": json.dumps(data)
+                }
+              },
+              {
+                "imageUrl": F"{end_point}/static/taipei_1.jpeg",
+                "action": {
+                  "type": "postback",
+                  "label": "台北101",
+                  "data": json.dumps(data)
+                }
+              }
+          ]
+          }
+        }
     return message
 
 
@@ -194,30 +220,45 @@ def getLocationConfirmMessage(title, latitude, longitude):
     data = {'title': title, 'latitude': latitude, 'longitude': longitude,
             'action': 'get_near'}
     message = {
-        "type": "template",
-        "altText": "This is a buttons template",
-        "template": {
-            "type": "confirm",
-            "text": "f"確認是否搜尋 {title} 附近地點？",
-            "actions": [
-                 {
-                    "type": "postback",
-                    "label": "是",
-                    "data": json.dumps(data)
-                },
-                {
-                    "type": "message",
-                    "label": "否",
-                    "data": "否"
-                }
-            ]
-        }
+      "type": "template",
+      "altText": "this is a confirm template",
+      "template": {
+          "type": "confirm",
+          "text": f"確認是否搜尋 {title} 附近地點？",
+          "actions": [
+              {
+                 "type": "postback",
+               "label": "是",
+               "data": json.dumps(data),
+               },
+              {
+                "type": "message",
+                "label": "否",
+                "text": "否"
+              }
+          ]
+      }
     }
     return message
 
 
 def getCallCarMessage(data):
-    message = dict()
+    message = {
+      "type": "template",
+      "altText": "this is a template",
+      "template": {
+          "type": "buttons",
+          "text": f"請選擇至 {data['title']} 預約叫車時間",
+          "actions": [
+              {
+               "type": "datetimepicker",
+               "label": "預約",
+               "data": json.dumps(data),
+               "mode": "datetime"
+               }
+          ]
+      }
+    }
     return message
 
 
@@ -226,26 +267,25 @@ def getPlayStickerMessage():
     message["type"] = "sticker"
     message["packageId"] = "446"
     message["stickerId"] = "1988"
-
     return message
 
 
 def getTaipei101LocationMessage():
     message = {
-        "type": "location",
-        "title": "taipei 101",
-        "address": "110台北市信義區市府路45號",
-        "latitude": 25.0341221,
-        "longitude": 121.5595365
-    }    
+      "type": "location",
+      "title": "台北101",
+      "address": "110台北市信義區市府路45號",
+      "latitude": 25.034127,
+      "longitude": 121.5618272
+    }
     return message
 
 
 def getMRTVideoMessage():
     message = {
-        "type": "video",
-        "originalContentUrl": F"{end_point}/static/taipei_101_video.mp4",
-        "previewImageUrl": F"{end_point}/static/taipei_101.jpeg",      
+      "type": "video",
+      "originalContentUrl": F"{end_point}/static/taipei_101_video.mp4",
+      "previewImageUrl": F"{end_point}/static/taipei_101.jpeg"
     }
     return message
 
@@ -268,10 +308,11 @@ def getTaipei101ImageMessage(originalContentUrl=F"{end_point}/static/taipei_101.
 
 def getImageMessage(originalContentUrl):
     message = {
-        "type": "image",
-        "originalContentUrl": originalContentUrl,
-         "previewImageUrl": originalContentUrl
+      "type": "image",
+      "originalContentUrl": originalContentUrl,
+      "previewImageUrl": originalContentUrl
     }
+
     return message
 
 
