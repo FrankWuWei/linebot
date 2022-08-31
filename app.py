@@ -238,7 +238,7 @@ def pushMessage(payload):
 
 def getTotalSentMessageCount():
     r = requests.get('https://api.line.me/v2/bot/message/quota/consumption',  handlers=HEADER)
-    print(r.jason)
+    print(r.jason())
     return 0
 
 
