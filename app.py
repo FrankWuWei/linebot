@@ -216,9 +216,7 @@ def getTaipei101LocationMessage():
         "address": "110台北市信義區市府路45號",
         "latitude": 25.0341221,
         "longitude": 121.5595365
-
-    }
-    
+    }    
     return message
 
 
@@ -227,7 +225,7 @@ def getMRTVideoMessage():
         "type": "video",
         "originalContentUrl": F"{end_point}/static/taipei_101_video.mp4",
         "previewImageUrl": F"{end_point}/static/taipei_101.jpeg",      
-        }
+    }
     return message
 
 
